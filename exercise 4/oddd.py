@@ -1,27 +1,11 @@
-"""
-Численное интегрирование функции f(x) = x^2 / (25 - x^2) на отрезке [1, 4]
 
-Точное значение: -3 + (5/2) * ln(6) ≈ 1.47940007...
-
-Методы:
-  1. Метод средних прямоугольников
-  2. Метод трапеций
-  3. Метод Симпсона
-
-Для каждого метода:
-  - вычисление при n in {10, 50, 100, 500, 1000}
-  - абсолютная и относительная погрешность
-  - визуализация аппроксимирующих фигур при n = 10
-"""
 
 import math
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon
 
-# ─────────────────────────────────────────────
-#  Параметры задачи
-# ─────────────────────────────────────────────
+
 a, b = 1.0, 4.0
 NS = [10, 50, 100, 500, 1000]
 EXACT = -3 + 2.5 * math.log(6)          # аналитическое значение
@@ -31,17 +15,14 @@ def f(x):
     return x ** 2 / (25 - x ** 2)
 
 
-# ─────────────────────────────────────────────
-#  Численные методы
-# ─────────────────────────────────────────────
 def midpoint_rect(n: int) -> float:
-    """Метод средних прямоугольников."""
+
     h = (b - a) / n
     return h * sum(f(a + h * (i + 0.5)) for i in range(n))
 
 
 def trapezoid(n: int) -> float:
-    """Метод трапеций."""
+
     h = (b - a) / n
     s = f(a) + f(b)
     s += 2 * sum(f(a + h * i) for i in range(1, n))
@@ -49,7 +30,7 @@ def trapezoid(n: int) -> float:
 
 
 def simpson(n: int) -> float:
-    """Метод Симпсона (n должно быть чётным)."""
+
     if n % 2 != 0:
         n += 1
     h = (b - a) / n
@@ -59,9 +40,6 @@ def simpson(n: int) -> float:
     return s * h / 3
 
 
-# ─────────────────────────────────────────────
-#  Погрешности
-# ─────────────────────────────────────────────
 def abs_error(approx: float) -> float:
     return abs(approx - EXACT)
 
@@ -70,9 +48,6 @@ def rel_error(approx: float) -> float:
     return abs_error(approx) / abs(EXACT) * 100
 
 
-# ─────────────────────────────────────────────
-#  Таблицы результатов
-# ─────────────────────────────────────────────
 def print_table(method_name: str, method_fn):
     print(f"\n{'='*70}")
     print(f"  {method_name}")
@@ -88,10 +63,6 @@ def print_table(method_name: str, method_fn):
         print(f"  {n:>6}  {v:>16.10f}  {ae:>16.2e}  {re:>13.8f}%")
     print(f"{'─'*70}")
 
-
-# ─────────────────────────────────────────────
-#  Визуализация — прямоугольники
-# ─────────────────────────────────────────────
 def plot_midpoint(ax, n=10):
     h = (b - a) / n
     x_fine = np.linspace(a, b, 600)
@@ -118,10 +89,6 @@ def plot_midpoint(ax, n=10):
     ax.text(0.98, 0.04, f'I ≈ {val:.6f}', transform=ax.transAxes,
             ha='right', fontsize=10, color='#1D9E75')
 
-
-# ─────────────────────────────────────────────
-#  Визуализация — трапеции
-# ─────────────────────────────────────────────
 def plot_trapezoid(ax, n=10):
     h = (b - a) / n
     x_fine = np.linspace(a, b, 600)
@@ -153,9 +120,7 @@ def plot_trapezoid(ax, n=10):
             ha='right', fontsize=10, color='#BA7517')
 
 
-# ─────────────────────────────────────────────
-#  Визуализация — Симпсон
-# ─────────────────────────────────────────────
+
 def plot_simpson(ax, n=10):
     if n % 2 != 0:
         n += 1
@@ -167,24 +132,24 @@ def plot_simpson(ax, n=10):
         x0, x1, x2 = a + h * i, a + h * (i + 1), a + h * (i + 2)
         y0, y1, y2 = f(x0), f(x1), f(x2)
 
-        # коэффициенты параболы через три точки
+
         d = h
         A = (y0 - 2*y1 + y2) / (2 * d**2)
         B = (y2 - y0) / (2 * d)
         C = y1
 
-        # точки параболы
+
         t = np.linspace(x0, x2, 60)
         dx = t - x1
         y_par = A * dx**2 + B * dx + C
 
-        # заливка
+
         ax.fill_between(t, 0, y_par,
                         facecolor='#534AB733', edgecolor='none', zorder=3)
-        # контур
+
         ax.plot(t, y_par, color='#534AB7', linewidth=1.8, zorder=4)
 
-        # узлы
+
         ax.plot([x0, x1, x2], [y0, y1, y2], 'o',
                 color='#534AB7', ms=5, zorder=6)
 
@@ -199,10 +164,6 @@ def plot_simpson(ax, n=10):
     ax.text(0.98, 0.04, f'I ≈ {val:.6f}', transform=ax.transAxes,
             ha='right', fontsize=10, color='#534AB7')
 
-
-# ─────────────────────────────────────────────
-#  График сходимости
-# ─────────────────────────────────────────────
 def plot_convergence(ax):
     ae_rect = [abs_error(midpoint_rect(n)) for n in NS]
     ae_trap = [abs_error(trapezoid(n))     for n in NS]
@@ -219,10 +180,6 @@ def plot_convergence(ax):
     ax.legend(fontsize=10)
     ax.grid(True, which='both', alpha=0.3)
 
-
-# ─────────────────────────────────────────────
-#  Главная функция
-# ─────────────────────────────────────────────
 def main():
     print("\n" + "="*70)
     print("  ЧИСЛЕННОЕ ИНТЕГРИРОВАНИЕ  f(x) = x² / (25 − x²)  на [1, 4]")
@@ -233,7 +190,6 @@ def main():
     print_table("Метод трапеций",                trapezoid)
     print_table("Метод Симпсона",                simpson)
 
-    # ── Итоговое сравнение ──────────────────────────────────────
     print(f"\n{'='*70}")
     print("  ИТОГОВОЕ СРАВНЕНИЕ при n = 1000")
     print(f"{'─'*70}")
@@ -245,7 +201,7 @@ def main():
               f"δ = {rel_error(v):.2e}%")
     print(f"{'='*70}\n")
 
-    # ── Графики ─────────────────────────────────────────────────
+
     fig, axes = plt.subplots(2, 2, figsize=(14, 10))
     fig.suptitle('Численное интегрирование  $f(x)=x^2/(25-x^2)$  на $[1,\\,4]$',
                  fontsize=14, fontweight='bold', y=0.98)

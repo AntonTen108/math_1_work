@@ -3,13 +3,12 @@ import numpy as np
 from matplotlib.patches import Polygon
 from matplotlib.collections import PatchCollection
 def midpoint_rect(func, a, b, n):
-    """Метод средних прямоугольников."""
+
     h = (b - a) / n
     return h * sum(func(a + h * (i + 0.5)) for i in range(n))
 
 
 def trapezoidal(func, a, b, n):
-    """Метод трапеций."""
     h = (b - a) / n
     x = np.linspace(a, b, n + 1)
     y = func(x)
@@ -17,7 +16,6 @@ def trapezoidal(func, a, b, n):
 
 
 def simpson(func, a, b, n):
-    """Метод Симпсона (составная формула). n должно быть чётным."""
     if n % 2 != 0:
         n += 1
     h = (b - a) / n
