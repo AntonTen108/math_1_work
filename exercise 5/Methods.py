@@ -1,5 +1,5 @@
 import numpy as np
-from config import alpha, beta
+from Config import alpha, beta
 
 
 def simpson(func, n):

@@ -2,10 +2,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from matplotlib.patches import Wedge
-from config import alpha, beta, r, f_area, f_length
-from methods import simpson
-from exact import EXACT_S, EXACT_L
-from errors import abs_error
+from Config import alpha, beta, r, f_area, f_length
+from Methods import simpson
+from Exact import EXACT_S, EXACT_L
+from Errors import abs_error
 
 
 def plot_polar_curve(ax):

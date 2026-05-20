@@ -1,7 +1,7 @@
-from config import NS, f_area, f_length
-from methods import simpson
-from errors import abs_error, rel_error
-from exact import EXACT_S, EXACT_L
+from Config import NS, f_area, f_length
+from Methods import simpson
+from Errors import abs_error, rel_error
+from Exact import EXACT_S, EXACT_L
 
 
 def print_tables():
